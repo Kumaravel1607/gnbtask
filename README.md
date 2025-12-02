@@ -23,15 +23,6 @@ The app is designed to run seamlessly on Android, iOS, and Web with responsive l
 
 *(Place your actual screenshots in an `assets/screenshots` folder or update these links)*
 
-| Light Mode | Dark Mode | Filters |
-|:---:|:---:|:---:|
-| <img src="assets/screenshots/home_light.png" width="200"> | <img src="assets/screenshots/home_dark.png" width="200"> | <img src="assets/screenshots/filters.png" width="200"> |
-
-| Property Detail | Upload Screen | Notification |
-|:---:|:---:|:---:|
-| <img src="assets/screenshots/detail.png" width="200"> | <img src="assets/screenshots/upload.png" width="200"> | <img src="assets/screenshots/notification.png" width="200"> |
-
----
 
 ## 🛠️ Setup Instructions
 
