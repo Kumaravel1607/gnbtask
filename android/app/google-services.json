@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "653357841440",
+    "project_id": "gnbtask",
+    "storage_bucket": "gnbtask.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653357841440:android:dfb42bfb29cf0c917c5045",
+        "android_client_info": {
+          "package_name": "com.example.gnbtask"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjGJDfLbdY8gLd46uz1PsRr5jwcYSVf_U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
