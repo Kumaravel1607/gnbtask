@@ -5,7 +5,6 @@ import 'package:gnbtask/provider/property_provider.dart';
 import 'package:gnbtask/Services/permission_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'dart:html' as html;
 
 class ImageUploadScreen extends StatefulWidget {
   final String propertyId;
@@ -27,50 +26,58 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
   Uint8List? _webImageBytes;
 
   // Camera capture - optimized for web
-Future<void> _takePhoto() async {
-  if (kIsWeb) {
-    final html.InputElement input = html.InputElement(type: 'file');
-    input.accept = 'image/*';
-    input.capture = 'camera'; // forces webcam on mobile & triggers permission on desktop
+  Future<void> _takePhoto() async {
+    // Skip permission check on web, browser handles it
+    if (!kIsWeb) {
+      final hasPermission = await PermissionService().requestCameraPermission();
 
-    input.onChange.listen((event) {
-      final file = input.files?.first;
-      if (file != null) {
-        final reader = html.FileReader();
-
-        reader.onLoadEnd.listen((event) {
-          setState(() {
-            _webImageBytes = reader.result as Uint8List?;
-            _capturedImage = XFile(file.name);
-          });
-        });
-
-        reader.readAsArrayBuffer(file);
+      if (!hasPermission) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text("Camera permission is required. Please enable it in settings."),
+              action: SnackBarAction(
+                label: "Settings",
+                onPressed: () => PermissionService().openSettings(),
+              ),
+              duration: const Duration(seconds: 5),
+            ),
+          );
+        }
+        return;
       }
-    });
+    }
 
-    input.click(); // triggers browser permission popup
-    return;
+    try {
+      final XFile? photo = await _picker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 80,
+        maxWidth: 1024,
+        preferredCameraDevice: CameraDevice.front,
+      );
+
+      if (photo != null) {
+        final bytes = await photo.readAsBytes();
+        setState(() {
+          _capturedImage = photo;
+          _webImageBytes = bytes;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              kIsWeb
+                  ? "Webcam Error: $e\nPlease allow camera permissions in browser"
+                  : "Camera Error: $e",
+            ),
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+    }
   }
-
-  // Mobile code (unchanged)
-  final hasPermission = await PermissionService().requestCameraPermission();
-  if (!hasPermission) return;
-
-  final XFile? photo = await _picker.pickImage(
-    source: ImageSource.camera,
-    imageQuality: 80,
-    maxWidth: 1024,
-  );
-
-  if (photo != null) {
-    final bytes = await photo.readAsBytes();
-    setState(() {
-      _capturedImage = photo;
-      _webImageBytes = bytes;
-    });
-  }
-}
 
   // Gallery pick
   Future<void> _pickFromGallery() async {
