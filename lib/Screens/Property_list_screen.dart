@@ -177,7 +177,7 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
 
                 // Mobile
                 if (constraints.maxWidth < 600) {
-                  childAspectRatio = 1.14;
+                  childAspectRatio = 1.05;
                 }
                 // Tablet
                 else if (constraints.maxWidth < 900) {
